@@ -19,7 +19,7 @@ app.get('/api/screenshot', async (req, res) => {
     timeout: 60000,
   });
 
-  await page.waitForTimeout(2000); // wait extra 2 seconds for fonts/images
+  await page.waitForTimeout(2000); // Wait for additional resources to load
 
   const buffer = await page.screenshot({ fullPage: true });
 
@@ -29,6 +29,7 @@ app.get('/api/screenshot', async (req, res) => {
   res.setHeader('Content-Disposition', 'attachment; filename="screenshot.png"');
   res.send(buffer);
 });
+
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
