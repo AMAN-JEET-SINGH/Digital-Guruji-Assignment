@@ -16,6 +16,6 @@ module.exports = async (req, res) => {
   await browser.close();
 
   res.setHeader('Content-Type', 'image/png');
-  res.setHeader('Content-Disposition', 'attachment; filename="infographic.png"');
+  res.setHeader('Content-Disposition', 'attachment; filename="infographic_1.png"');
   res.send(screenshotBuffer);
 };
