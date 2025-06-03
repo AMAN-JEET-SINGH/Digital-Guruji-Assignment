@@ -7,8 +7,7 @@
   "playwright": "^1.44.0"
 },
 "scripts": {
-  "start": "node server.js",
-  "postinstall": "npx playwright install --with-deps"
+  "start": "node server.js"
 }
 
 }
