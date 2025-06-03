@@ -13,7 +13,7 @@ app.get('/api/screenshot', async (req, res) => {
   const page = await browser.newPage();
 
   // Load local site
-  await page.goto(`http://localhost:${PORT}`, { waitUntil: 'networkidle' });
+  await page.goto(`https://digital-guruji-assignment-thj2.onrender.com`, { waitUntil: 'networkidle' });
 
   // Screenshot full page (or use '#infographic' for specific section)
   const buffer = await page.screenshot({ fullPage: true });
