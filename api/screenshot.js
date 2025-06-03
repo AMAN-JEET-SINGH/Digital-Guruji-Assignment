@@ -1,21 +1,20 @@
-const puppeteer = require('puppeteer');
+const chromium = require('chrome-aws-lambda');
+const puppeteer = require('puppeteer-core');
 
-module.exports = async (req, res) => {
+module.exports = async function handler(req, res) {
   const browser = await puppeteer.launch({
-    headless: 'new',
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    args: chromium.args,
+    executablePath: await chromium.executablePath,
+    headless: chromium.headless,
   });
 
   const page = await browser.newPage();
+  await page.goto('https://your-frontend-url.com', { waitUntil: 'networkidle0' });
 
-  const targetUrl = process.env.BASE_URL || 'https://your-vercel-url.vercel.app/';
-  await page.goto(targetUrl, { waitUntil: 'networkidle0' });
-
-  const screenshotBuffer = await page.screenshot({ fullPage: true });
+  const screenshot = await page.screenshot({ fullPage: true });
 
   await browser.close();
 
   res.setHeader('Content-Type', 'image/png');
-  res.setHeader('Content-Disposition', 'attachment; filename="infographic_1.png"');
-  res.send(screenshotBuffer);
+  res.send(screenshot);
 };
