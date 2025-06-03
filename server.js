@@ -5,17 +5,22 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Serve frontend files
+// Serve static frontend files
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/api/screenshot', async (req, res) => {
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage();
 
-  // Load local site
-  await page.goto(`https://digital-guruji-assignment-thj2.onrender.com`, { waitUntil: 'networkidle' });
+  await page.setViewportSize({ width: 1280, height: 800 });
 
-  // Screenshot full page (or use '#infographic' for specific section)
+  await page.goto('https://digital-guruji-assignment-thj2.onrender.com', {
+    waitUntil: 'load',
+    timeout: 60000,
+  });
+
+  await page.waitForTimeout(2000); // wait extra 2 seconds for fonts/images
+
   const buffer = await page.screenshot({ fullPage: true });
 
   await browser.close();
