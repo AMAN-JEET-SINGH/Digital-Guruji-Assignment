@@ -1,9 +1,22 @@
-async function takeScreenshot() {
-      const response = await fetch('https://digital-guruji-assignment-thj2.onrender.com/screenshot');
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'infographic.png';
-      a.click();
-    }
+function takeScreenshot() {
+  const button = document.querySelector('.screenshot-btn');
+  button.style.display = 'none'; // hide before capture
+
+  domtoimage.toPng(document.body, {
+    width: document.body.scrollWidth,
+    height: document.body.scrollHeight
+  })
+  .then((dataUrl) => {
+    button.style.display = 'block'; // show again
+
+    const link = document.createElement('a');
+    link.download = 'full-page-screenshot.png';
+    link.href = dataUrl;
+    link.click();
+  })
+  .catch((error) => {
+    button.style.display = 'block';
+    console.error('Screenshot failed:', error);
+    alert('Screenshot failed. See console for error.');
+  });
+}
