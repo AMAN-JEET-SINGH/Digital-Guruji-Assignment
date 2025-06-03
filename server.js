@@ -16,7 +16,7 @@ app.get('/api/screenshot', async (req, res) => {
       headless: true,
     });
     const page = await browser.newPage();
-    await page.goto('https://digital-guruji-assignment-thj2.onrender.com', {
+    await page.goto('https://digital-guruji-assignment-1wy8.onrender.com', {
       waitUntil: 'networkidle0',
     });
     const buffer = await page.screenshot({ fullPage: true });
