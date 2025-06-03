@@ -12,9 +12,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/api/screenshot', async (req, res) => {
   try {
     const browser = await puppeteer.launch({
-      args: ['--no-sandbox'],
-      headless: true,
-    });
+  executablePath: '/usr/bin/google-chrome',  // Use system Chrome
+  args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  headless: true,
+});
+
     const page = await browser.newPage();
     await page.goto('https://digital-guruji-assignment-1wy8.onrender.com', {
       waitUntil: 'networkidle0',
