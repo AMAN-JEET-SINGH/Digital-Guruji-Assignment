@@ -8,6 +8,6 @@
   },
   "scripts": {
     "start": "node server.js",
-    "postinstall": "puppeteer install --ignore-scripts=false"
+    "postinstall": "npx playwright install --with-deps"
   }
 }
