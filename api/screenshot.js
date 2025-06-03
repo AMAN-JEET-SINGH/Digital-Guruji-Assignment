@@ -1,20 +1,30 @@
-const chromium = require('chrome-aws-lambda');
-const puppeteer = require('puppeteer-core');
+import chromium from 'chrome-aws-lambda';
+import puppeteer from 'puppeteer-core';
 
-module.exports = async function handler(req, res) {
-  const browser = await puppeteer.launch({
-    args: chromium.args,
-    executablePath: await chromium.executablePath,
-    headless: chromium.headless,
-  });
+export default async function handler(req, res) {
+  let browser = null;
 
-  const page = await browser.newPage();
-  await page.goto('https://your-frontend-url.com', { waitUntil: 'networkidle0' });
+  try {
+    browser = await puppeteer.launch({
+      args: chromium.args,
+      executablePath: await chromium.executablePath,
+      headless: chromium.headless,
+    });
 
-  const screenshot = await page.screenshot({ fullPage: true });
+    const page = await browser.newPage();
+    // Use your deployed front-end URL here
+    await page.goto('https://your-deployed-frontend-url.vercel.app', { waitUntil: 'networkidle0' });
 
-  await browser.close();
+    const screenshotBuffer = await page.screenshot({ fullPage: true });
 
-  res.setHeader('Content-Type', 'image/png');
-  res.send(screenshot);
-};
+    res.setHeader('Content-Type', 'image/png');
+    res.setHeader('Content-Disposition', 'attachment; filename="infographic.png"');
+    res.send(screenshotBuffer);
+  } catch (error) {
+    res.status(500).send('Error taking screenshot: ' + error.message);
+  } finally {
+    if (browser !== null) {
+      await browser.close();
+    }
+  }
+}
