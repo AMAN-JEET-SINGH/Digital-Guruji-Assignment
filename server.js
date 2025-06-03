@@ -14,7 +14,7 @@ app.get('/screenshot', async (req, res) => {
   const browser = await puppeteer.launch({ headless: 'new' });
   const page = await browser.newPage();
 
-  const targetUrl = process.env.BASE_URL || `http://localhost:${PORT}`;
+  const targetUrl =  `http://localhost:${PORT}`;
   await page.goto(targetUrl, { waitUntil: 'networkidle0' });
 
   const screenshotBuffer = await page.screenshot({ fullPage: true });
