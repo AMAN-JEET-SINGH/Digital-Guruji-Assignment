@@ -14,7 +14,7 @@ app.get('/screenshot', async (req, res) => {
   const browser = await puppeteer.launch({ headless: 'new' });
   const page = await browser.newPage();
 
-  const targetUrl =  `https://digital-guruji-assignment-ehfdvm3wo-aman-jeet-singhs-projects.vercel.app`;
+  const targetUrl =  `https://digital-guruji-assignment-thj2.onrender.com`;
   await page.goto(targetUrl, { waitUntil: 'networkidle0' });
 
   const screenshotBuffer = await page.screenshot({ fullPage: true });
