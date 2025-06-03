@@ -14,7 +14,7 @@ app.get('/api/screenshot', async (req, res) => {
 
   await page.setViewportSize({ width: 1280, height: 800 });
 
-  await page.goto('https://digital-guruji-assignment-thj2.onrender.com', {
+  await page.goto('https://digital-guruji-assignment-1wy8.onrender.com', {
     waitUntil: 'load',
     timeout: 60000,
   });
@@ -32,5 +32,5 @@ app.get('/api/screenshot', async (req, res) => {
 
 
 app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+  console.log(`Server running on ${PORT}`);
 });
