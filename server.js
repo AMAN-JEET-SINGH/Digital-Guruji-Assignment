@@ -1,31 +1,42 @@
-require('dotenv').config(); // 👈 Add this at the top
-
 const express = require('express');
 const puppeteer = require('puppeteer');
 const path = require('path');
-const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Serve static frontend files
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/screenshot', async (req, res) => {
-  const browser = await puppeteer.launch({ headless: 'new' });
-  const page = await browser.newPage();
+app.get('/api/screenshot', async (req, res) => {
+  try {
+    // Launch Puppeteer with no-sandbox flags for Render environment
+    const browser = await puppeteer.launch({
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      headless: true,
+    });
 
-  const targetUrl =  `https://digital-guruji-assignment.vercel.app`;
-  await page.goto(targetUrl, { waitUntil: 'networkidle0' });
+    const page = await browser.newPage();
 
-  const screenshotBuffer = await page.screenshot({ fullPage: true });
+    // Navigate to your app URL
+    const url = `http://localhost:${PORT}`;
+    await page.goto(url, { waitUntil: 'networkidle2' });
 
-  await browser.close();
+    // Screenshot the full page (or use element screenshot)
+    const screenshotBuffer = await page.screenshot({ fullPage: true });
 
-  res.setHeader('Content-Type', 'image/png');
-  res.setHeader('Content-Disposition', 'attachment; filename="infographic.png"');
-  res.send(screenshotBuffer);
+    await browser.close();
+
+    // Set response headers to download the image
+    res.setHeader('Content-Type', 'image/png');
+    res.setHeader('Content-Disposition', 'attachment; filename="infographic.png"');
+    res.send(screenshotBuffer);
+  } catch (err) {
+    console.error('Screenshot error:', err);
+    res.status(500).send('Error taking screenshot');
+  }
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+  console.log(`Server listening on port ${PORT}`);
 });
