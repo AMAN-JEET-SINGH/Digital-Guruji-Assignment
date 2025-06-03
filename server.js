@@ -5,22 +5,20 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Serve frontend
+// Serve frontend from /public folder
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Screenshot API
 app.get('/api/screenshot', async (req, res) => {
   try {
     const browser = await puppeteer.launch({
-  executablePath: '/usr/bin/google-chrome',  // Use system Chrome
-  args: ['--no-sandbox', '--disable-setuid-sandbox'],
-  headless: true,
-});
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
 
     const page = await browser.newPage();
-    await page.goto('https://digital-guruji-assignment-1wy8.onrender.com', {
-      waitUntil: 'networkidle0',
-    });
+    await page.goto('http://localhost:3000', { waitUntil: 'networkidle0' });
+
     const buffer = await page.screenshot({ fullPage: true });
     await browser.close();
 
@@ -34,5 +32,5 @@ app.get('/api/screenshot', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running at ${PORT}`);
+  console.log(`Server running at http://localhost:${PORT}`);
 });

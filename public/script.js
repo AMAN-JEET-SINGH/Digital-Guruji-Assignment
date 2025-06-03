@@ -1,14 +1,22 @@
-    function takeScreenshot() {
-      fetch('/api/screenshot')
-        .then(res => res.blob())
-        .then(blob => {
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = 'infographic.png';
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-          window.URL.revokeObjectURL(url);
-        })
-        .catch(console.error);}
+function takeScreenshot() {
+  const button = document.querySelector('.screenshot-btn');
+  button.style.display = 'none'; // hide before capture
+
+  domtoimage.toPng(document.body, {
+    width: document.body.scrollWidth,
+    height: document.body.scrollHeight
+  })
+  .then((dataUrl) => {
+    button.style.display = 'block'; // show again
+
+    const link = document.createElement('a');
+    link.download = 'full-page-screenshot.png';
+    link.href = dataUrl;
+    link.click();
+  })
+  .catch((error) => {
+    button.style.display = 'block';
+    console.error('Screenshot failed:', error);
+    alert('Screenshot failed. See console for error.');
+  });
+}
