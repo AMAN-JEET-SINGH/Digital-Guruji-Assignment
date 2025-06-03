@@ -1,4 +1,5 @@
-// server.js
+require('dotenv').config(); // 👈 Add this at the top
+
 const express = require('express');
 const puppeteer = require('puppeteer');
 const path = require('path');
@@ -7,14 +8,14 @@ const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Serve static frontend files
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Screenshot endpoint
 app.get('/screenshot', async (req, res) => {
   const browser = await puppeteer.launch({ headless: 'new' });
   const page = await browser.newPage();
-  await page.goto(`http://localhost:${PORT}`, { waitUntil: 'networkidle0' });
+
+  const targetUrl = process.env.BASE_URL || `http://localhost:${PORT}`;
+  await page.goto(targetUrl, { waitUntil: 'networkidle0' });
 
   const screenshotBuffer = await page.screenshot({ fullPage: true });
 
